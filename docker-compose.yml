@@ -1,0 +1,42 @@
+version : '3.8'
+
+services:
+    postgres:
+        image: postgres:16.2-alpine3.19
+        environment:
+            POSTGRES_DB: test
+            POSTGRES_USER: sf_user
+            POSTGRES_PASSWORD: random_password
+            PGDATA: /var/lib/postgressql/data
+        volumes:
+             - ./db-data:/var/lib/postgresql/data:rw
+-       ports:
+            - "5432:5432"
+- 
+    php:
+        build:
+            context: .
+        image: sf-docker/php:dev
+        restart: on-failure
+        environment:
+            APP_ENV: dev
+            APP_DEBUG: 1
+            PHP_DATE_TIMEZONE: ${PHP_DATE_TIMEZONE:-UTC}
+        depends-on:
+            - postgres
+- 
+    nginx:
+        build:
+            context:
+        image: sf-docker/nginx:dev
+        restart: on-failure
+        denpends_on:
+            - php
+-       ports:
+            - "8080:80" 
+- 
+
+       
+- 
+
+    
